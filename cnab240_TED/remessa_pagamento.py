@@ -1,3 +1,12 @@
+from datetime import datetime
+import cnab240_TED.core.header_arquivo as ha
+import cnab240_TED.core.header_lote as hl
+import cnab240_TED.core.trailer_arquivo as ta
+import cnab240_TED.core.segmento_a as sega
+import cnab240_TED.core.segmento_b as segb
+import cnab240_TED.core.trailer_lote as tl
+
+
 def generate(odict_entrada, conf=None):
     if conf is None:
         print("Código do banco é um campo obrigatório")
