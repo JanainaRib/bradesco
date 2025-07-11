@@ -29,18 +29,19 @@ def generate(odict_entrada, conf=None):
         total_registros_arquivo = 2  # header_arquivo + trailer_arquivo
         lote_num = 1
 
-        def processar_lote(contas, numero_lote):
+        def processar_lote(contas, numero_lote, forma_lancamento):
             list_segmentos = []
             somatoria = 0
             sequencial_registro = 0
 
-            header_lote = odict_entrada['header_lote'].copy()
+            header_lote = hl.default()
+            header_lote.update(odict_entrada['header_lote'])
             header_lote['lote'] = str(numero_lote)
+            header_lote['forma_lancamento'] = forma_lancamento
             str_header_lote = hl.header_lote(header_lote)
 
             for conta in contas:
                 odic_sega = sega.default()
-                odic_hd = header_lote.default_header_lote()
                 odic_sega['banco'] = codigo_banco_empresa
                 odic_sega['sequencial_registro_lote'] = str(sequencial_registro + 1)
                 odic_sega['banco_fv'] = conta['banco']
@@ -53,6 +54,11 @@ def generate(odict_entrada, conf=None):
                 odic_sega['favorecido_nome'] = conta['favorecido_nome']
                 seu_numero_complemento = str(datetime.now().strftime("%y")) + str(datetime.now().timetuple().tm_yday) + str(datetime.now().strftime("%H%M"))
                 odic_sega['credito_seu_numero'] = conta.get('credito_seu_numero', conta['cpf'] + seu_numero_complemento)[:9]
+
+                # Campos TED obrigatórios
+                odic_sega['finalidade_ted'] = '    '
+                odic_sega['finalidade_complementar'] = '  '
+
                 str_seg_a = sega.parse(odic_sega)
 
                 odic_segb = segb.default()
@@ -70,30 +76,28 @@ def generate(odict_entrada, conf=None):
             trailer_lote = tl.default()
             trailer_lote['banco'] = codigo_banco_empresa
             trailer_lote['lote'] = str(numero_lote)
-            trailer_lote['quantidade_registro_lote'] = sequencial_registro + 2
+            trailer_lote['quantidade_registro_lote'] = sequencial_registro + 2  # +2 do header + trailer
             trailer_lote['somatoria_valores'] = somatoria
             str_trailer_lote = tl.parse(trailer_lote)
 
             lote_completo = f"{str_header_lote}\n" + '\n'.join(list_segmentos) + f"\n{str_trailer_lote}"
             return lote_completo, sequencial_registro + 2
 
+        # Lote 1: Banco 237
         if contas_237:
             print("➡️ Processando lote para banco 237")
-            lote_237, reg_237 = processar_lote(contas_237, lote_num)
+            lote_237, reg_237 = processar_lote(contas_237, lote_num, forma_lancamento='01')  # Crédito em conta corrente
             conteudo_lotes.append(lote_237)
             total_registros_arquivo += reg_237
             lote_num += 1
-            odic_hd['forma_lancamento'] = '01'
-            odic_sega['finalidade_ted'] = '    '
-            odic_sega['finalidade_complementar'] = '  '
 
+        # Lote 2: Outros bancos
         if contas_outros:
             print("➡️ Processando lote para outros bancos")
-            lote_outros, reg_outros = processar_lote(contas_outros, lote_num)
+            lote_outros, reg_outros = processar_lote(contas_outros, lote_num, forma_lancamento='41')  # TED
             conteudo_lotes.append(lote_outros)
             total_registros_arquivo += reg_outros
             lote_num += 1
-            odic_hd['forma_lancamento'] = '41'
 
         trailer_arquivo = ta.default()
         trailer_arquivo['banco'] = codigo_banco_empresa
