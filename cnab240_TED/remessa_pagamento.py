@@ -46,7 +46,6 @@ def generate(odict_entrada, conf=None):
                 odic_sega = default_sega()
                 odic_sega['banco'] = codigo_banco_empresa
                 odic_sega['lote'] = str(numero_lote) 
-                odic_segb['lote'] = str(numero_lote) 
                 odic_sega['sequencial_registro_lote'] = str(sequencial_registro + 1)
                 odic_sega['banco_fv'] = conta['banco']
                 odic_sega['valor_pagamento'] = str(conta['valor_centavos'])
@@ -69,6 +68,7 @@ def generate(odict_entrada, conf=None):
 
                 odic_segb = default_segb()
                 odic_segb['sequencial_registro_lote'] = str(sequencial_registro + 2)
+                odic_segb['lote'] = str(numero_lote) 
                 odic_segb['dados_complementares_favorecido_inscricao_numero'] = conta['cpf']
                 odic_segb['dados_complementares_pagamento_valor_documento'] = str(conta['valor_centavos'])
                 str_seg_b = parse_segb(odic_segb)
