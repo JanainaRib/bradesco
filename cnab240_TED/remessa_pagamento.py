@@ -40,7 +40,7 @@ def generate(odict_entrada, conf=None):
 
             for conta in contas:
                 odic_sega = sega.default()
-                odic_hd = header_lote.default()
+                odic_hd = header_lote.default_header_lote()
                 odic_sega['banco'] = codigo_banco_empresa
                 odic_sega['sequencial_registro_lote'] = str(sequencial_registro + 1)
                 odic_sega['banco_fv'] = conta['banco']
