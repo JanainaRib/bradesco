@@ -6,7 +6,6 @@ import cnab240_TED.core.segmento_a as sega
 import cnab240_TED.core.segmento_b as segb
 import cnab240_TED.core.trailer_lote as tl
 
-
 def generate(odict_entrada, conf=None):
     if conf is None:
         print("Código do banco é um campo obrigatório")
@@ -54,11 +53,6 @@ def generate(odict_entrada, conf=None):
                 odic_sega['favorecido_nome'] = conta['favorecido_nome']
                 seu_numero_complemento = str(datetime.now().strftime("%y")) + str(datetime.now().timetuple().tm_yday) + str(datetime.now().strftime("%H%M"))
                 odic_sega['credito_seu_numero'] = conta.get('credito_seu_numero', conta['cpf'] + seu_numero_complemento)[:9]
-
-                # Campos TED obrigatórios
-                odic_sega['finalidade_ted'] = '    '
-                odic_sega['finalidade_complementar'] = '  '
-
                 str_seg_a = sega.parse(odic_sega)
 
                 odic_segb = segb.default()
@@ -76,25 +70,23 @@ def generate(odict_entrada, conf=None):
             trailer_lote = tl.default()
             trailer_lote['banco'] = codigo_banco_empresa
             trailer_lote['lote'] = str(numero_lote)
-            trailer_lote['quantidade_registro_lote'] = sequencial_registro + 2  # +2 do header + trailer
+            trailer_lote['quantidade_registro_lote'] = sequencial_registro + 2
             trailer_lote['somatoria_valores'] = somatoria
             str_trailer_lote = tl.parse(trailer_lote)
 
             lote_completo = f"{str_header_lote}\n" + '\n'.join(list_segmentos) + f"\n{str_trailer_lote}"
             return lote_completo, sequencial_registro + 2
 
-        # Lote 1: Banco 237
         if contas_237:
             print("➡️ Processando lote para banco 237")
-            lote_237, reg_237 = processar_lote(contas_237, lote_num, forma_lancamento='01')  # Crédito em conta corrente
+            lote_237, reg_237 = processar_lote(contas_237, lote_num, forma_lancamento='01')
             conteudo_lotes.append(lote_237)
             total_registros_arquivo += reg_237
             lote_num += 1
 
-        # Lote 2: Outros bancos
         if contas_outros:
             print("➡️ Processando lote para outros bancos")
-            lote_outros, reg_outros = processar_lote(contas_outros, lote_num, forma_lancamento='41')  # TED
+            lote_outros, reg_outros = processar_lote(contas_outros, lote_num, forma_lancamento='41')
             conteudo_lotes.append(lote_outros)
             total_registros_arquivo += reg_outros
             lote_num += 1
@@ -112,4 +104,3 @@ def generate(odict_entrada, conf=None):
     except Exception as e:
         print("❌ ERRO DURANTE A GERAÇÃO:", e)
         raise
-
