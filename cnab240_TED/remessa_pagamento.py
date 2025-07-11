@@ -61,9 +61,11 @@ def generate(odict_entrada, conf=None):
                 if conta['banco'] == '237':
                     odic_sega['finalidade_ted'] = '    '  # 4 espaços em branco
                     odic_sega['finalidade_complementar'] = '  '  # 2 espaços em branco
+                    odic_sega['cód_camara'] = '000'
                 else:
                     odic_sega['finalidade_ted'] = '00001'
                     odic_sega['finalidade_complementar'] = 'CC'
+                    odic_sega['cód_camara'] = '018'
                 str_seg_a = parse_sega(odic_sega)
 
                 odic_segb = default_segb()
