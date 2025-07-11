@@ -40,6 +40,7 @@ def generate(odict_entrada, conf=None):
 
             for conta in contas:
                 odic_sega = sega.default()
+                odic_hd = header_lote.default()
                 odic_sega['banco'] = codigo_banco_empresa
                 odic_sega['sequencial_registro_lote'] = str(sequencial_registro + 1)
                 odic_sega['banco_fv'] = conta['banco']
@@ -82,6 +83,9 @@ def generate(odict_entrada, conf=None):
             conteudo_lotes.append(lote_237)
             total_registros_arquivo += reg_237
             lote_num += 1
+            odic_hd['forma_lancamento'] = '01'
+            odic_sega['finalidade_ted'] = '    '
+            odic_sega['finalidade_complementar'] = '  '
 
         if contas_outros:
             print("➡️ Processando lote para outros bancos")
@@ -89,6 +93,7 @@ def generate(odict_entrada, conf=None):
             conteudo_lotes.append(lote_outros)
             total_registros_arquivo += reg_outros
             lote_num += 1
+            odic_hd['forma_lancamento'] = '41'
 
         trailer_arquivo = ta.default()
         trailer_arquivo['banco'] = codigo_banco_empresa
