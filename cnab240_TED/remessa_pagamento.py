@@ -56,7 +56,13 @@ def generate(odict_entrada, conf=None):
                 odic_sega['favorecido_nome'] = conta['favorecido_nome']
                 seu_numero_complemento = datetime.now().strftime("%y") + str(datetime.now().timetuple().tm_yday) + datetime.now().strftime("%H%M")
                 odic_sega['credito_seu_numero'] = conta.get('credito_seu_numero', conta['cpf'] + seu_numero_complemento)[:9]
-
+                # Ajusta finalidades conforme banco
+                if conta['banco'] == '237':
+                    odic_sega['finalidade_ted'] = '    '  # 4 espaços em branco
+                    odic_sega['finalidade_complementar'] = '  '  # 2 espaços em branco
+                else:
+                    odic_sega['finalidade_ted'] = '00001'
+                    odic_sega['finalidade_complementar'] = 'CC'
                 str_seg_a = parse_sega(odic_sega)
 
                 odic_segb = default_segb()
