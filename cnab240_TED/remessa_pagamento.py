@@ -112,6 +112,7 @@ def generate(odict_entrada, conf=None):
         trailer_arquivo_dict['banco'] = codigo_banco_empresa
         trailer_arquivo_dict['lote'] = '9999'
         trailer_arquivo_dict['quantidade_registros'] = total_registros_arquivo
+        trailer_arquivo_dict['quantidade_lotes'] = lote_num - 1
         str_trailer_arquivo = ta.parse(trailer_arquivo_dict)
 
         conteudo = f"{str_header}\n" + '\n'.join(conteudo_lotes) + f"\n{str_trailer_arquivo}"
