@@ -7,14 +7,19 @@ import zipfile
 import os
 import io
 import base64
+import unicodedata
 
 import cnab240_exec  # seu módulo CNAB
 import cnab240_exec_ted
 
 
-# Função para limpar caracteres especiais
 def limpar_caracteres(texto):
-    return texto.encode('ascii', 'ignore').decode('ascii')
+    # Remove acentos e transforma caracteres em ASCII equivalente
+    texto = unicodedata.normalize('NFKD', texto)
+    texto = texto.encode('ASCII', 'ignore').decode('ASCII')
+    # Remove qualquer símbolo que não seja letra, número ou espaço
+    texto = re.sub(r'[^\w\s]', '', texto)
+    return texto
 
 # Função para extrair dados dos arquivos TXT enviados
 def extracao_arquivos(uploaded_files):
