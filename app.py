@@ -14,7 +14,7 @@ import cnab240_exec_ted
 
 # Função para limpar caracteres especiais
 def limpar_caracteres(texto):
-    return re.sub(r'[^\w\s]', '', texto)
+    return texto.encode('ascii', 'ignore').decode('ascii')
 
 # Função para extrair dados dos arquivos TXT enviados
 def extracao_arquivos(uploaded_files):
