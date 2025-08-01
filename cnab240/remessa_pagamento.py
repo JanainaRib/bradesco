@@ -74,7 +74,7 @@ def generate(odict_entrada, conf=None):
     conteudo = f"{str_header}\n{str_header_lote}\n{str_segmento}\n{str_trailer_lote}\n{str_trailer_arquivo}"
 
     # Gerar nome do arquivo baseado no primeiro conta (pode ajustar)
-    filename = f"OCTCPSC{conta['Abreviatura']}{datetime.now().strftime('%d')}5.txt"
+    filename = f"OCTCPSCBPPIX{datetime.now().strftime('%d%m')}.txt"
 
     # Retorna o conteúdo e o nome do arquivo
     return conteudo, filename
