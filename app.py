@@ -327,7 +327,7 @@ if uploaded_files:
 
                             conteudo_corrigido = resultado.replace('\r\n', '\n').replace('\n', '\r\n')
                             conteudo_bytes = conteudo_corrigido.encode('utf-8')
-                            nome_arquivo = f"OCTCPSC{filial}{datetime.now().strftime('%d')}TED.txt"
+                            nome_arquivo = f"OCTCPSCBPTED{datetime.now().strftime('%d%m')}.txt"
                             #nome_arquivo = f"CNAB240_TED_{filial}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
 
                             st.download_button(
